@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Robert W. Buchkowski" />
+
+<meta name="date" content="2023-05-08" />
+
+<title>soilfoodweb_vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">soilfoodweb_vignette</h1>
+<h4 class="author">Robert W. Buchkowski</h4>
+<h4 class="date">2023-05-08</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The purpose of the <code>soilfoodwebs</code> package is to help
+analyze and simulate soil food webs. The following five functions are
+the core of the package:</p>
+<ol style="list-style-type: decimal">
+<li>Calculate the fluxes through a food web given biomass, parameters,
+and food web structure.</li>
+<li>Calculate the direct and indirect contribution of each trophic
+species (i.e., node) to carbon and nitrogen mineralization.</li>
+<li>Calculate food web stability and <code>smin</code>.</li>
+<li>Simulate the food web away from equilibrium.</li>
+<li>Conduct a detritus decomposition simulation and calculate the
+decomposition constant.</li>
+</ol>
+<p>The package can complete the following tasks using functions built to
+work with the communities that are input:</p>
+<ol style="list-style-type: decimal">
+<li>Modify the fluxes to balance carbon and nitrogen demands.</li>
+<li>Modify the structure of the food web.</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(soilfoodwebs)</span></code></pre></div>
+</div>
+<div id="how-to-build-a-community" class="section level1">
+<h1>How to build a community</h1>
+<p>The basis of the <code>soilfoodwebs</code> package is a community,
+which contains two elements: a feeding matrix and a properties
+database.</p>
+<p>This vignette will contain the code to build a simple 5 trophic
+species (i.e., node) community from scratch and then run it through all
+the analyses included in the package. A different community is included
+as an example in the package, called <code>intro_comm</code>.</p>
+<div id="building-the-properties-database" class="section level3">
+<h3>Building the properties database:</h3>
+<p>First, we will build the properties database. This database must
+contain all the columns listed below in this example.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>properties <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="st">&quot;Predator&quot;</span>, <span class="st">&quot;Prey1&quot;</span>, <span class="st">&quot;Prey2&quot;</span>, <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;Detritus&quot;</span>), <span class="co"># Name</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">d =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="fl">0.5</span>,<span class="fl">1.2</span>,<span class="dv">0</span>), <span class="co"># Death rate</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">a =</span> <span class="fu">c</span>(<span class="fl">0.61</span>,<span class="fl">0.65</span>,<span class="fl">0.45</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="co"># Assimilation efficiency</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.4</span>,<span class="fl">0.3</span>,<span class="fl">0.3</span>,<span class="dv">1</span>), <span class="co"># Production efficiency for carbon (nitrogen production efficiency is assumed to be 1)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">B =</span> <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">9000</span>,<span class="dv">1380000</span>), <span class="co"># Biomass</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">CN =</span> <span class="fu">c</span>(<span class="fl">4.5</span>,<span class="fl">4.8</span>,<span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">30</span>), <span class="co"># Carbon to nitrogen ratio</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">DetritusRecycling =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="co"># proportion of detritus recycling</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">isDetritus =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="co"># Boolean: Is this pool detritus?</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">isPlant =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="co"># Boolean: Is this pool a plant?</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">canIMM =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="co"># Boolean: Can the pool immobilize inorganic nitrogen?</span></span></code></pre></div>
+<p>The properties <code>a</code>, <code>p</code>, <code>d</code>,
+<code>B</code>, and <code>CN</code> are used throughout the soil food
+web literature (Moore and de Ruiter, 2012).</p>
+<p>The units of death rate <code>d</code> are <span class="math inline">\(time^{-1}\)</span>, which sets the time step for
+any simulations. Typically, death rates are included as the inverse of
+turnover time in years.</p>
+<p>The units for biomass <code>B</code> set the unit for the model
+analyses. These <strong>must</strong> be in some units of carbon if both
+carbon and nitrogen analyses are being used. If <code>B</code> is not in
+units of carbon, then the C:N ratio calculations are nonsensical.</p>
+<p>The units should also agree with the units of <code>CN</code>. If C:N
+ratio is a molar ratio (i.e., <span class="math inline">\(mol_{Carbon}/mol_{Nitrogen}\)</span>), then the
+biomass should also be <span class="math inline">\(mol_{Carbon}\)</span>.</p>
+<p>The area unit is more flexible and should be defined by the data
+itself. An example input for biomass data would be <span class="math inline">\(grams_{Carbon}\)</span> <span class="math inline">\(hectare^{-1}\)</span>.</p>
+<p>The conversion efficiency is set by assimilation efficiency
+<code>a</code> and production efficiency <code>p</code>. Currently, the
+model assumes that production efficiency for nitrogen is perfect, so
+production efficiency sets the relative efficiency of carbon versus
+nitrogen use. These are ratio values that are unitless and should be
+between 0 and 1.</p>
+<p>The <code>DetritusRecycling</code> vector should sum to 1 and is the
+proportion of dead organic matter either from death or egestion that is
+returned to the detritus pool. In communities with only 1 detritus pool,
+this is just a vector with one 1 as shown here. Otherwise, you can split
+detritus recycling into fractions.</p>
+<p>The final properties are Boolean supplied to the model as 1 = TRUE or
+0 = FALSE. <code>isDetritus</code> identifies detritus pools. Detrital
+pools must have <code>a==1</code>, <code>p==1</code>, <code>d==0</code>,
+and is the only pool type where <code>DetritusRecycling</code> can be
+non-zero. <code>isPlant</code> identifies plant nodes and allows them to
+gain carbon at a <em>per capita</em> rate. This feature is poorly
+developed and may not be reliable. Finally, <code>canIMM</code>
+identifies trophic species that can immobilize inorganic nitrogen and
+can therefore have net negative nitrogen mineralization.</p>
+</div>
+<div id="building-the-interaction-matrix" class="section level3">
+<h3>Building the interaction matrix:</h3>
+<p>The interaction matrix can be build in one of two ways. First, it can
+be built with a data frame of predator-prey interactions and the
+predator preference for each prey item. This data frame is added to the
+function <code>build_foodweb</code>, which compiles the interaction
+matrix and combines it into a list with the properties data frame.
+Second, you can build the interaction matrix by hand and create the
+community manually. The second option is described below.</p>
+<p>To build a community using the <code>build_foodweb</code> function,
+you need two data frames: the feeding and the properties. The properties
+data frame was build in the last section. The feeding data frame always
+has three columns: Predator, Prey, and Preferences.</p>
+<p>Predator and Prey columns contain the names–as they appear in the
+properties data frame ID column–of all predator-prey pairs.</p>
+<p>The Preferences column contains a numerical value weighting the
+relative feeding preferences of each node <em>after</em> differences in
+prey abundance are taken into account. If you want predators to feed in
+proportion to prey abundance, set all of these to <code>1</code> (Moore
+and de Ruiter, 2012). This assumption could be modified by setting the
+diet ratios using values other than 1. For example, to make the Predator
+eat Prey1 twice as as Prey2 relative to their biomass you would put a
+<code>2</code> in the row with <code>Predator</code> and
+<code>Prey1</code> and a <code>1</code> in the row with
+<code>Predator</code> and <code>Prey2</code>. Note that this does
+<em>not</em> mean that the predator will eat twice as much of Prey1 as
+Prey2 unless they have the same biomass.</p>
+<p>In the example community, the Predator eats both prey. Prey1 eats
+both Microbes and Detritus, while Prey2 only eats Detritus. Microbes eat
+Detritus.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a list of feeding relationships:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>feedinglist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Predator =</span> <span class="fu">c</span>(<span class="st">&quot;Predator&quot;</span>, <span class="st">&quot;Predator&quot;</span>,<span class="st">&quot;Prey1&quot;</span>,<span class="st">&quot;Prey1&quot;</span>, <span class="st">&quot;Prey2&quot;</span>, <span class="st">&quot;Microbe&quot;</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">Prey =</span> <span class="fu">c</span>(<span class="st">&quot;Prey1&quot;</span>, <span class="st">&quot;Prey2&quot;</span>, <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;Detritus&quot;</span>, <span class="st">&quot;Detritus&quot;</span>, <span class="st">&quot;Detritus&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">Preference =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+</div>
+<div id="building-the-community" class="section level3">
+<h3>Building the community:</h3>
+<p>Now you can assemble the community using the
+<code>build_foodweb</code> function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the community</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>our_comm <span class="ot">&lt;-</span> <span class="fu">build_foodweb</span>(<span class="at">feeding =</span> feedinglist,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">properties =</span> properties)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up our working files</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(feedinglist)</span></code></pre></div>
+</div>
+<div id="manual-community-building" class="section level3">
+<h3>Manual community building:</h3>
+<p>We can also build the interaction matrix and the community
+manually.</p>
+<p>First, the interaction matrix contains feeding preferences for
+trophic species on each other. It is formatted with the species names in
+the row and column names. The rows are the predators and the columns are
+their prey,so the first row of the matrix below notes that the Predator
+eats Prey1 and Prey2 in proportion to their biomass.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sp_names <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Predator&quot;</span>, <span class="st">&quot;Prey1&quot;</span>, <span class="st">&quot;Prey2&quot;</span>, <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;Detritus&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>feedingmatrix <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">dimnames =</span> <span class="fu">list</span>(sp_names, sp_names),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>To build the community manually, you combine the two features
+together into a list with the names <code>imat</code> and
+<code>prop</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the community</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>our_comm <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">imat =</span> feedingmatrix,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">prop =</span> properties)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up our working files</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(feedingmatrix, sp_names, properties)</span></code></pre></div>
+</div>
+</div>
+<div id="community-analysis-comana" class="section level1">
+<h1>Community analysis (comana)</h1>
+<p>The <code>comana</code> function is the central function of the
+package. It analyses the community fluxes and can produce plots of the
+results. Conceptually, the fluxes are calculated from the top of the
+food web down, so predation rates at higher trophic levels determine the
+amount of consumption that is necessary for lower trophic levels to
+maintain equilibrium (i.e., net zero growth; Moore and de Ruiter, 2012).
+Technically, the fluxes are calculated by solving the system of linear
+equations defined by setting each species` change in biomass to zero and
+calculating their consumption rates. The matrix equation solved is <span class="math inline">\(\textbf{Ax}=\textbf{b}\)</span>, where <span class="math inline">\(\textbf{A}\)</span> defines feeding interactions,
+<span class="math inline">\(\textbf{x}\)</span> is the target vector of
+total consumption rates for each species, and <span class="math inline">\(\textbf{b}\)</span> is a vector of loss to natural
+death. Solving the system using matrix methods at once, instead of
+sequentially from the top down, allows cannibalism and mutual feeding to
+be calculated simultaneously.</p>
+<p>Inside the <code>comana</code> function, the community is checked for
+quality using the <code>checkcomm(our_comm)</code>. This function adds
+an extra column to the properties data frame called
+<code>MutualPred</code> to identify trophic species that are cannibals
+and eat each other. This is will explored more below.</p>
+<p>Analysis of our community produces the following results:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ana1 <span class="ot">&lt;-</span> <span class="fu">comana</span>(our_comm)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Returns the following results:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Consumption rates for each species or input rates into the system for any species/pool that has no prey</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>consumption</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Predator        Prey1        Prey2      Microbe     Detritus </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3.278689e-01 9.308371e+01 1.945262e+01 3.600201e+04 2.524394e+04</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Carbon mineralized by each species</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>Cmin</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Predator        Prey1        Prey2      Microbe     Detritus </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.100000    36.302648     6.127575 25201.407313     0.000000</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Nitrogen mineralization by each species</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>Nmin</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Predator         Prey1         Prey2       Microbe      Detritus </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.01880342   -2.98928393   -0.23343141 -150.00837686    0.00000000</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 3.1. Contribution of each prey species to nitrogen mineralized when feeding on each of their prey</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>Nminmat</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator      Prey1       Prey2    Microbe     Detritus</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0 0.01196581 0.006837607 0.00000000    0.0000000</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0 0.00000000 0.000000000 0.01633488   -3.0056188</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0 0.00000000 0.000000000 0.00000000   -0.2334314</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0 0.00000000 0.000000000 0.00000000 -150.0083769</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0 0.00000000 0.000000000 0.00000000    0.0000000</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Consumption rates for each species on each of their prey items</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>fmat</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator     Prey1     Prey2   Microbe    Detritus</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0 0.2017654 0.1261034 0.0000000     0.00000</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0 0.0000000 0.0000000 0.6031342    92.48058</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0 0.0000000 0.0000000 0.0000000    19.45262</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0 0.0000000 0.0000000 0.0000000 36002.01045</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0 0.0000000 0.0000000 0.0000000     0.00000</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. The community returned back</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>ana1<span class="sc">$</span>usin</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator Prey1 Prey2 Microbe Detritus</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0     1     1       0        0</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0     0     0       1        1</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0     0     0       0        1</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0     0     0       0        1</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0     0     0       0        0</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID   d    a   p        B   CN DetritusRecycling isDetritus isPlant</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator 1.0 0.61 0.5 1.00e-01  4.5                 0          0       0</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 3.0 0.65 0.4 8.00e+00  4.8                 0          0       0</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 0.5 0.45 0.3 5.00e+00  5.0                 0          0       0</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 1.2 1.00 0.3 9.00e+03  8.0                 0          0       0</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.0 1.00 1.0 1.38e+06 30.0                 1          1       0</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   canIMM MutualPred</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0       &lt;NA&gt;</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0       &lt;NA&gt;</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0       &lt;NA&gt;</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      1       &lt;NA&gt;</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0       &lt;NA&gt;</span></span></code></pre></div>
+<p>We can plot the results of the community analysis using the plotting
+built into the function. Options include the web, nitrogen
+mineralization, and carbon mineralization. The workhorse for the food
+web plot is the function <code>diagram::plotmat</code>, so check there
+to understand the options.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Produce a plot if you want</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>old.par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>ana1 <span class="ot">&lt;-</span> <span class="fu">comana</span>(our_comm, <span class="at">mkplot =</span> T, <span class="at">BOX.SIZE =</span> <span class="fl">0.15</span>, <span class="at">BOX.CEX =</span> <span class="fl">0.7</span>, <span class="at">edgepos =</span> <span class="fu">c</span>(<span class="fl">0.15</span>, <span class="fl">0.85</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old.par)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div id="parameter-uncertainty" class="section level2">
+<h2>Parameter uncertainty</h2>
+<p>Drawing uncertain parameters from a distribution can be easily
+accomplished using the function <code>parameter_uncertainty</code>. This
+function currently allows the user to draw any parameter from either a
+uniform, normal, or gamma distribution. It requires information on the
+distribution, some measure of uncertainty (e.g., standard deviation,
+min/max).</p>
+<p>For example, we can draw biomass values from a gamma distribution
+given the mean values listed in our community and some measure of
+uncertainty, perhaps from replicate samples (Koltz <em>et al.</em>,
+2018). For this example we will assume a coefficient of variation of 0.2
+for all trophic species. Our example focuses on the direct and indirect
+effects of each organism on mineralization, <code>whomineralizes</code>
+as the output of interest. Other options are <code>comana</code> and
+<code>CNsim</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw parameter uncertainty:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build function inputs to indicate distribution, error measure, and error type using an empty matrix.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>guidemat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="fu">length</span>(our_comm<span class="sc">$</span>prop<span class="sc">$</span>ID), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(our_comm<span class="sc">$</span>prop<span class="sc">$</span>ID, <span class="fu">c</span>(<span class="st">&quot;B&quot;</span>,<span class="st">&quot;a&quot;</span>)))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Replicate this matrix across the inputs.</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>distributionin <span class="ot">=</span> guidemat</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>errormeasurein <span class="ot">=</span> guidemat</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>errortypein <span class="ot">=</span> guidemat</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Test two most useful distributions (normal often produces negative values).</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>distributionin[,<span class="dv">1</span>] <span class="ot">=</span> <span class="st">&quot;gamma&quot;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>distributionin[,<span class="dv">2</span>] <span class="ot">=</span> <span class="st">&quot;uniform&quot;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Gamma error uses coefficient of variation. Uniform distribution MUST be the minimum (maximum is the parameter value in the input community).</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>errortypein[,<span class="dv">1</span>] <span class="ot">=</span> <span class="st">&quot;CV&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>errortypein[,<span class="dv">2</span>] <span class="ot">=</span> <span class="st">&quot;Min&quot;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Set these values.</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>errormeasurein[,<span class="dv">1</span>] <span class="ot">=</span> <span class="fl">0.2</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>errormeasurein[,<span class="dv">2</span>] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the calculation.</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>oot <span class="ot">&lt;-</span> <span class="fu">parameter_uncertainty</span>(<span class="at">usin =</span> our_comm, <span class="at">distribution =</span> distributionin, <span class="at">errormeasure =</span> errormeasurein, <span class="at">errortype =</span> errortypein, <span class="at">fcntorun =</span> <span class="st">&quot;whomineralizes&quot;</span>, <span class="at">parameters =</span> <span class="fu">c</span>(<span class="st">&quot;B&quot;</span>, <span class="st">&quot;a&quot;</span>), <span class="at">replicates =</span> <span class="dv">10</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind together the result</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>oot <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">&quot;rbind&quot;</span>, oot)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the direct and indirect effects of Predators across 10 parameter draws:</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">subset</span>(oot, ID <span class="sc">==</span> <span class="st">&quot;Predator&quot;</span>)[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     DirectC             DirectN             IndirectC        </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :2.576e-06   Min.   :-2.288e-04   Min.   :7.995e-05  </span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:3.117e-06   1st Qu.:-1.357e-04   1st Qu.:2.189e-04  </span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :3.880e-06   Median :-1.231e-04   Median :3.745e-04  </span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :4.028e-06   Mean   :-1.279e-04   Mean   :4.906e-04  </span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:4.258e-06   3rd Qu.:-9.918e-05   3rd Qu.:5.210e-04  </span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :7.197e-06   Max.   :-8.110e-05   Max.   :1.729e-03  </span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    IndirectN        </span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :4.462e-05  </span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:1.412e-04  </span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :2.445e-04  </span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :3.077e-04  </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:4.060e-04  </span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :9.477e-04</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: You can subset to either include or exclude any trophic species from the result by filtering on the ID column.</span></span></code></pre></div>
+</div>
+<div id="correcting-stoichiometry" class="section level2">
+<h2>Correcting stoichiometry</h2>
+<p>The community we analyzed above has an important error in
+stoichiometry. The net nitrogen mineralization for the two prey species
+is negative even though they cannot immobilize nitrogen. The function
+<code>corrstoich</code> fixes this by first trying to modify their diet
+preferences and then reducing their production efficiency to make sure
+they are getting enough nitrogen (Buchkowski and Lindo, 2021).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>our_comm2 <span class="ot">&lt;-</span> <span class="fu">corrstoich</span>(our_comm)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>our_comm2</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator Prey1 Prey2 Microbe Detritus</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0     1     1       0        0</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0     0     0     184        1</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0     0     0       0        1</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0     0     0       0        1</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0     0     0       0        0</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID   d    a         p        B   CN DetritusRecycling isDetritus</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator 1.0 0.61 0.5000000 1.00e-01  4.5                 0          0</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 3.0 0.65 0.4000000 8.00e+00  4.8                 0          0</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 0.5 0.45 0.1666667 5.00e+00  5.0                 0          0</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 1.2 1.00 0.3000000 9.00e+03  8.0                 0          0</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.0 1.00 1.0000000 1.38e+06 30.0                 1          1</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   isPlant canIMM MutualPred</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       0      0       &lt;NA&gt;</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       0      0       &lt;NA&gt;</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       0      0       &lt;NA&gt;</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       0      1       &lt;NA&gt;</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5       0      0       &lt;NA&gt;</span></span></code></pre></div>
+<p>The feeding preference of Prey1 is modified because they can switch
+to Microbes over Detritus in this example. Prey2 only has one food
+source, so it reduces its production efficiency from 0.3 to 0.16. The
+resulting community has acceptable nitrogen mineralization rates.
+Because the problem is solved using quadratic programming, small
+negative numbers are possible from rounding error.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the new nitrogen mineralization rates.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comana</span>(our_comm2)<span class="sc">$</span>Nmin</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Predator         Prey1         Prey2       Microbe      Detritus </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.880342e-02 -2.220446e-16  0.000000e+00 -1.507052e+02  0.000000e+00</span></span></code></pre></div>
+<p>Sometimes the extreme diet corrections are not reasonable. In this
+case, a user-defined matrix mirroring <code>imat</code> can be supplied
+with the <strong>maximum</strong> diet contributions of each trophic
+species in the diet. Notice how the leftover correction necessary to
+balance Prey1’s diet is now accomplished by reducing production
+efficiency.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set diet limits</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>DL <span class="ot">&lt;-</span> our_comm<span class="sc">$</span>imat </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: This only works because all feeding is currently set as 1--the same as 100% of the diet can be from that resource if necessary.</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>DL[<span class="st">&quot;Prey1&quot;</span>, <span class="st">&quot;Microbe&quot;</span>] <span class="ot">=</span> <span class="fl">0.2</span> <span class="co"># Microbes only 20% of the diet.</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">corrstoich</span>(our_comm, <span class="at">dietlimits =</span> DL)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator Prey1 Prey2  Microbe Detritus</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0     1     1  0.00000        0</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0     0     0 38.33333        1</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0     0     0  0.00000        1</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0     0     0  0.00000        1</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0     0     0  0.00000        0</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID   d    a         p        B   CN DetritusRecycling isDetritus</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator 1.0 0.61 0.5000000 1.00e-01  4.5                 0          0</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 3.0 0.65 0.2480000 8.00e+00  4.8                 0          0</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 0.5 0.45 0.1666667 5.00e+00  5.0                 0          0</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 1.2 1.00 0.3000000 9.00e+03  8.0                 0          0</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.0 1.00 1.0000000 1.38e+06 30.0                 1          1</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   isPlant canIMM MutualPred</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       0      0       &lt;NA&gt;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       0      0       &lt;NA&gt;</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       0      0       &lt;NA&gt;</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       0      1       &lt;NA&gt;</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5       0      0       &lt;NA&gt;</span></span></code></pre></div>
+</div>
+<div id="modifying-the-community-structure" class="section level2">
+<h2>Modifying the community structure</h2>
+<p>The community can be modified to add, combine, or remove trophic
+species. The function for combining trophic species has the default
+functionality to combine the two trophic species that have the most
+similar feeding relationships (i.e., predators and prey), but
+user-defined inputs are also acceptable (Buchkowski and Lindo,
+2021).</p>
+<p>Combining species outputs the biomass weighted mean of their
+parameters and sums their biomass. The combined trophic species are
+named <em>first/second</em>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the most similar trophic species</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comtrosp</span>(our_comm)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Predator Prey1/Prey2      Microbe     Detritus</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator           0  0.07692308 0.000000e+00 0.000000e+00</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1/Prey2        0  0.00000000 3.599712e-07 7.222900e-07</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe            0  0.00000000 0.000000e+00 7.246377e-07</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus           0  0.00000000 0.000000e+00 0.000000e+00</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            ID        d         a         p        B        CN DetritusRecycling</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    Predator 1.000000 0.6100000 0.5000000 1.00e-01  4.500000                 0</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Prey1/Prey2 2.038462 0.5730769 0.3615385 1.30e+01  4.876923                 0</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     Microbe 1.200000 1.0000000 0.3000000 9.00e+03  8.000000                 0</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    Detritus 0.000000 1.0000000 1.0000000 1.38e+06 30.000000                 1</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   isDetritus isPlant canIMM MutualPred</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1          0       0      0       &lt;NA&gt;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2          0       0      0       &lt;NA&gt;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4          0       0      1       &lt;NA&gt;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5          1       0      0       &lt;NA&gt;</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the Predator and Prey1</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">comtrosp</span>(our_comm, <span class="at">selected =</span> <span class="fu">c</span>(<span class="st">&quot;Predator&quot;</span>, <span class="st">&quot;Prey1&quot;</span>))</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Predator/Prey1      Prey2      Microbe     Detritus</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator/Prey1      0.0379867 0.03846154 3.599712e-07 3.599712e-07</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2               0.0000000 0.00000000 0.000000e+00 7.246377e-07</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe             0.0000000 0.00000000 0.000000e+00 7.246377e-07</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus            0.0000000 0.00000000 0.000000e+00 0.000000e+00</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               ID        d         a         p        B        CN</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator/Prey1 2.975309 0.6495062 0.4012346 8.10e+00  4.796296</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          Prey2 0.500000 0.4500000 0.3000000 5.00e+00  5.000000</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        Microbe 1.200000 1.0000000 0.3000000 9.00e+03  8.000000</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5       Detritus 0.000000 1.0000000 1.0000000 1.38e+06 30.000000</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   DetritusRecycling isDetritus isPlant canIMM     MutualPred</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                 0          0       0      0 Predator/Prey1</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                 0          0       0      0           &lt;NA&gt;</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                 0          0       0      1           &lt;NA&gt;</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                 1          1       0      0           &lt;NA&gt;</span></span></code></pre></div>
+<p>The combination of Predator and Prey1 creates two new features that
+need to be considered. First, it creates a cannibalistic interaction
+noted in the properties data frame. It also has non-unitary feeding
+preferences, because these are biomass weighted preferences from the
+consumption rates of the original prey items. We can leave these default
+features or remove them using the following options.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete cannibalism and reset feeding preferences</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comtrosp</span>(our_comm, <span class="at">selected =</span> <span class="fu">c</span>(<span class="st">&quot;Predator&quot;</span>, <span class="st">&quot;Prey1&quot;</span>), <span class="at">deleteCOMBOcannibal =</span> T, <span class="at">allFEEDING1 =</span> T)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Predator/Prey1 Prey2 Microbe Detritus</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator/Prey1              0     1       1        1</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2                       0     0       0        1</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe                     0     0       0        1</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus                    0     0       0        0</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               ID        d         a         p        B        CN</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator/Prey1 2.975309 0.6495062 0.4012346 8.10e+00  4.796296</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          Prey2 0.500000 0.4500000 0.3000000 5.00e+00  5.000000</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        Microbe 1.200000 1.0000000 0.3000000 9.00e+03  8.000000</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5       Detritus 0.000000 1.0000000 1.0000000 1.38e+06 30.000000</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   DetritusRecycling isDetritus isPlant canIMM MutualPred</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                 0          0       0      0       &lt;NA&gt;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                 0          0       0      0       &lt;NA&gt;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                 0          0       0      1       &lt;NA&gt;</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                 1          1       0      0       &lt;NA&gt;</span></span></code></pre></div>
+<p>You can also remove trophic species from the community by name.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete trophic species</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">removenodes</span>(our_comm, <span class="st">&quot;Predator&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Prey1 Prey2 Microbe Detritus</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1        0     0       1        1</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2        0     0       0        1</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe      0     0       0        1</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus     0     0       0        0</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID   d    a   p       B   CN DetritusRecycling isDetritus isPlant</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 3.0 0.65 0.4       8  4.8                 0          0       0</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 0.5 0.45 0.3       5  5.0                 0          0       0</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 1.2 1.00 0.3    9000  8.0                 0          0       0</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.0 1.00 1.0 1380000 30.0                 1          1       0</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   canIMM</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      1</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0</span></span></code></pre></div>
+<p>You can also add a new node.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a new trophic species</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">newnode</span>(our_comm, <span class="st">&quot;NewNode&quot;</span>, <span class="at">prey =</span> <span class="fu">c</span>(<span class="at">Detritus =</span> <span class="dv">1</span>), <span class="at">predator =</span> <span class="fu">c</span>(<span class="at">Predator =</span> <span class="dv">2</span>, <span class="at">Prey1 =</span> <span class="fl">0.1</span>), <span class="at">newprops =</span> <span class="fu">c</span>(<span class="at">d =</span> <span class="dv">1</span>, <span class="at">a =</span> <span class="fl">0.1</span>, <span class="at">p =</span> <span class="fl">0.1</span>, <span class="at">B =</span> <span class="dv">10</span>, <span class="at">CN =</span> <span class="dv">10</span>, <span class="at">DetritusRecycling =</span> <span class="dv">0</span>, <span class="at">isDetritus =</span> <span class="dv">0</span>, <span class="at">isPlant =</span> <span class="dv">0</span>, <span class="at">canIMM =</span> <span class="dv">0</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Predator Prey1 Prey2 Microbe Detritus NewNode</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator        0     1     1       0        0     2.0</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1           0     0     0       1        1     0.1</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2           0     0     0       0        1     0.0</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe         0     0     0       0        1     0.0</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus        0     0     0       0        0     0.0</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NewNode         0     0     0       0        1     0.0</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID   d    a   p        B   CN DetritusRecycling isDetritus isPlant</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator 1.0 0.61 0.5 1.00e-01  4.5                 0          0       0</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 3.0 0.65 0.4 8.00e+00  4.8                 0          0       0</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 0.5 0.45 0.3 5.00e+00  5.0                 0          0       0</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 1.2 1.00 0.3 9.00e+03  8.0                 0          0       0</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.0 1.00 1.0 1.38e+06 30.0                 1          1       0</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d  NewNode 1.0 0.10 0.1 1.00e+01 10.0                 0          0       0</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   canIMM MutualPred</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0       &lt;NA&gt;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0       &lt;NA&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0       &lt;NA&gt;</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      1       &lt;NA&gt;</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0       &lt;NA&gt;</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d      0       &lt;NA&gt;</span></span></code></pre></div>
+</div>
+</div>
+<div id="calibrating-the-fluxes-to-a-specific-ecosystem" class="section level1">
+<h1>Calibrating the fluxes to a specific ecosystem</h1>
+<p><code>soilfoodwebs</code> calculates the fluxes of carbon and
+nitrogen based on the community demands, which means that it is
+<em>very</em> likely that the initial predictions of total
+mineralization do not match empirical data. This because generic
+parameter for conversion efficiencies (i.e., <code>a</code> and
+<code>p</code>) are unlikely to match a given study system.</p>
+<p>The user adjust the parameters to deal with this mismatch using two
+sources: (1) empirical measurements of mineralization or (2) known
+relationships with abitoic variables.</p>
+<div id="using-empirical-measurements-of-mineralization" class="section level2">
+<h2>Using empirical measurements of mineralization</h2>
+<p>It is not possible to adjust all the food web parameters with overall
+ecosystem flux data (e.g., carbon mineralization), because there are too
+many parameters in the model to constrain. Instead, Holtkamp <em>et
+al.</em> (2011) suggests modifying the microbial production efficiency
+to match carbon and nitrogen mineralization rates. Modifying only
+microbial efficiencies is justified because they represent the vast
+majority of soil heterotrophic respiration and mineralization. We
+suggest the same strategy.</p>
+<p>We will demonstrate this with the <code>intro_comm</code> because it
+has two microbial pools. We assume the baseline parameters are the
+correct ones, so we can calculate true carbon and ntirogen
+mineralization. In reality, these would be measured empirically or
+estimated for the target ecosystem using available data bases (Jian
+<em>et al.</em> 2021).</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create function to modify fungal production efficiency</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ccxf <span class="ot">&lt;-</span> <span class="cf">function</span>(p, ccx){</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  ccx<span class="sc">$</span>prop<span class="sc">$</span>p[<span class="dv">4</span>] <span class="ot">=</span> p[<span class="dv">1</span>]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  ccx<span class="sc">$</span>prop<span class="sc">$</span>p[<span class="dv">5</span>] <span class="ot">=</span> p[<span class="dv">2</span>]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(<span class="at">Cmin =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(ccx))<span class="sc">$</span>Cmin), <span class="at">Nmin =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(ccx))<span class="sc">$</span>Nmin)))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Return carbon and nitrogen mineralization across these gradients</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>res1 <span class="ot">=</span> <span class="fu">expand.grid</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">=</span> res1</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  res2[i,] <span class="ot">=</span> <span class="fu">ccxf</span>(<span class="fu">as.numeric</span>(res1[i,]), <span class="at">ccx =</span> intro_comm)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">cbind</span>(res1, res2)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(res) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>, <span class="st">&quot;p2&quot;</span>, <span class="st">&quot;Cmin&quot;</span>, <span class="st">&quot;Nmin&quot;</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create color gradient to work with</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>p1col <span class="ot">=</span> <span class="fu">palette.colors</span>(<span class="dv">10</span>, <span class="st">&quot;Polychrome 36&quot;</span>)[res<span class="sc">$</span>p1<span class="sc">*</span><span class="dv">10</span>]</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>p2col <span class="ot">=</span> <span class="fu">palette.colors</span>(<span class="dv">10</span>, <span class="st">&quot;Polychrome 36&quot;</span>)[res<span class="sc">$</span>p2<span class="sc">*</span><span class="dv">10</span>]</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>old.par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Cmin<span class="sc">~</span>p1, <span class="at">data =</span> res, <span class="at">col =</span> p2col, <span class="at">xlab =</span> <span class="st">&quot;Prod. eff. Fungi 1&quot;</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(intro_comm))<span class="sc">$</span>Cmin), <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Nmin<span class="sc">~</span>p1, <span class="at">data =</span> res, <span class="at">col =</span> p2col, <span class="at">xlab =</span> <span class="st">&quot;Prod. eff. Fungi 1&quot;</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(intro_comm))<span class="sc">$</span>Nmin), <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Nmin<span class="sc">~</span>Cmin, <span class="at">data =</span> res, <span class="at">col =</span> p2col, <span class="at">bg =</span> p1col, <span class="at">pch =</span> <span class="dv">21</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(intro_comm))<span class="sc">$</span>Nmin), <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">sum</span>(<span class="fu">comana</span>(<span class="fu">corrstoich</span>(intro_comm))<span class="sc">$</span>Cmin), <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>), </span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">palette.colors</span>(<span class="dv">10</span>, <span class="st">&quot;Polychrome 36&quot;</span>),</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.5</span>, <span class="at">title =</span> <span class="st">&quot;Production efficiency scale&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">xpd =</span> T)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAJACAMAAABSRCkEAAABKVBMVEUAAAAAADoAAGYAOjoAOpAAZmYAZpAAZrYW/zIc/84yg/46AAA6ADo6AGY6OgA6Ojo6OmY6OpA6ZmY6ZpA6ZrY6kJA6kLY6kNtaUVZmAABmADpmAGZmOgBmOjpmOmZmOpBmZmZmZpBmZrZmkGZmkJBmkLZmkNtmtrZmtttmtv+QOgCQOjqQOmaQZgCQZjqQZmaQZpCQkDqQkGaQkJCQkLaQkNuQrRyQtraQttuQtv+Q27aQ29uQ2/+wAGi2ZgC2Zjq2Zma2ZpC2kDq2kGa2kJC2kLa2tpC2tra225C22/+2/9u2///bkDrbkGbbkJDbtmbbtpDbtrbb25Db29vb2//b/9vb///k4eP2Ii7+APr+rxb/tmb/tpD/25D/27b/29v//7b//9v///9NCYRsAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAb2klEQVR4nO2dC5sbt3WGKXXTJSm7aRyl4jqtI22sNLttvU7Tsla7XCupm1Qh5VpWy6vokPz/P6KDufCKwWDm4HIAfu/zSNydnQt4+A6Ag5kBWxsACLR8FwCEDQQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhoCvTQSnlmtzAgPPQEergYZ6+XNssCAkRLoNWn99kPy4+HNgsDwgMCARKaTVjedBVNGQA5mp3oETrRQArSeEACaTwggTQekEAWBkhAIECCnsa3gsZkLOX4foc0qt+eXhQUaXzQeZwLgewfwh7GBKrcQ69H3pEPnAkUbXzoaXy6h14vzAi5Eije+NDTeLGHXi/QCDkSKOL40LOwyANk5BARx8eMQBFX0WYOEW98DKTx6f9hxged6AqQxleANF6NzTRef6yJMRBIjbM0PlQgkBpXaXywQCA1zrKwULFY+DNp4iFQBIewh7s0PlAgkBqk8RVAIDXursYHCgRSY7IPtEANxPUQ9jAo0EJ0g0YSgyIPUAiHsIc5gda3NxtkYUwPYQ8IVIGpwp/vSL2eQFePh6O0CcNItJQzHqnXfHurq9aje/ncCpEHSIdzHmhFGm8ACGT3GIwx1YSd70g9BDLC+Y7Ua3aiiyvLj8+uig7hEPYwd0NZ+bQckQdID6TxFaxvS6cGijxAWiCNt3oMxiALUwOBKoBAaiBQBUjj1UCgCpDGq4FAFeCmejUQqAKk8WogUAVI49VAoAqQhamBQBVAIDXuBJpMyDvygbM0Ptr4GBJoMjmNUAhT4rhK4+ONjxmBJpPTCAUxKZejq/ERx8eaQGFMC2hUoJH029Qij4+1JiyWAOlQfb9UvPGx14kOIT6maqDlE9H7Ka+BIo6PxTQ+gPiYa8JGSd2jEkhCHPHBOJAhVleXNQUKAQhUgcnCL1oQyM4xGIOb6tVAoAogkBoIVAEEUuNOoOmUvCMfOBMo2vg0j+DBHXfTqV6EuKWurgSKNz5maqDpVC9C7AbPHAkUcXycCsRv+N7RPdERx8dQH0j/BAstQGYOEW983HaiucWHWyc6wPiYEmg201qZWXzcCRRtfLZrLMpuR9Daw2ymGaFTvMZMXyDER73G6uqGcIzZrHGE/Nba2gIhPhVrbB8saHSM5gHy3G/UFwjxqVhDNoOv/jFm7XbzE+w0QM5Cpt+EqeNT9WRqvPHZNWGkNr6dUHvLFHl8XEWoRhOmik/lk6nxxsdMFtZuUyJ0usRZhBw9WBhxfEwJ1O02DdAp0gDZiZgzgaKNT7pGEgBiE9adz7u1tyxFGh8rEdITqDI+lU+mxhsfMzVQEh/DETpZYKcvaWogseLJ1IjjY0ag+XwwmM/JuyqnpNYmx8zRSHTE8TEzEj0f9PsDmwEqq7WPF0prckXQTI1EV6TxEcfHzEh0Ep8kQg13oIdWMlL7RDQ0El2VxkccHzMj0f2UhjtojPwE012W/mBmJLoyC4s4PmZGov0EqOSskywqPRHNjEQzFchJfAxdjfcSHxnSJr78pDPUB6pM4+ONj5k+kIhQw80doDgRTV2Nr5wnOtr4mOkDBUf9TnTt+AQ9T3T9TnT2vfBNCDJABTWaMNLV+FBxdjVeRgjzSrq6Gi8jjviYuif6FNm8kuxwdDFVRiTxsSaQbF5JfvgTKJb45GuICbY2i0elHcX6bXwsARIo50AUNPi6p1jik60xygKTTfUnoUkbH0J86tVA69tWWS7f4OueIolPcT9Q9ttCOsdWw6n8A4hPLYFGrUaJauTxORRIJkjV3yNPUwuWT8obeFE3pbXPGcYnXWP7nczyaSLP+isdcx6kzdP2r5dZbM5VoKLzMyo9yc73Kx1TSubPLMhq6MXj4dkKlKdZZtv4EDCTheVN/OLi+/MVqILzHarXIm/iR6VfdRAqpgQ646901GJ9mxsEgaQ0y8JkU+JwS10d3VQvJY742BNINikXu8EzjwJFEh/NJqx+Gi+bFpDf8L0/gWKJj2YE66fxsQTI1iFiiY+92zkiqaKtHSKS+FhM4+PoJNo7RBzxsZjGa07J5TVmPgWKIz7Ns7Cqm8Y1J3XzW2tbFOhM4mMtjdecFtBzv9FfDRRLfKyl8bEEyNYhYomPtTRed15JaXychcxjHyiS+NhL43VnBZTGx1WEPAoUSXyspfHyaQG1vjJCWm3bCZk/gWKJj7U0PolPEqGjhXpfWiMLkKWTzqNAkcTHWhbWFfNKHk0LqPu9a/L4nEaIHjN/AsUSHwMC5WMdR69d6fIkPiXrH75Ojn+fTLTW25SsV/bqQqC442MtjZ8POp2TaQF1vzr0FGmrr1mTK05EfzVQLPGxlsYPOv1+52RawOZfXiyroE/CUdK9LK/c/QkUS3yspfEdMSlX53ipZOiMEjOdroDyRPQnUCzx0e8DLerVQNJpASWDr81r7bKzTrKo9ET0J1As8dEWKJ1gaSQxqEaAJMP3uomHLlrDblwFCjE+ugKtb8W8AnXuiS45wSwHSIbiRPQ4Eh1JfOwJJJtXUnL9Rxof2yFj0ImOJT56Al09HqbzJMsmS67zGciu/0jjYz1COT4FkhBgfDTf3uqq9eheOgxUJ0DS6z+niYe02rYTMl4ChRgfe1fjJciu/5QkHsfxsHTSMRMowPg4FUhy/Ud6X5U8PqcRoseMl0AhxsetQOJrszQCdPrOS2ptcswsCtQq0N8kxPg4FUh2/Ud6Y5683Zcs0qrJFUHjVQOFGB+nAsmu/8gSD62TThag2iciL4FCjI9TgSTXf2SJh7Tall4l0ukKKE9EXgKFGB+nAkmG7+WJR1Jtz46XaV1n1KvJd4t4CRRifHwLJLsxT1Jty/uSeteuVSedKYHMzOAWYnycCiS5/iNJPNL4HEWopNbWipnqRDQkkKkZ3AKMj1uBTq//yBIPabt/mozIgiatyRUnohmBzM2jHV58HAt0gvTGPNHuHy2SJCOSANU+EbkJdAL7+PgWSHZjnqTdl18lOjnryk660hPRVBNmbSJ29vHxLZDsvipJuy99ikp21mnV5LtFpjrR1iZiZx8fjgJJ2n1ZMiI766TDbooTkVcaL4F9fHwLJLsxT9LuS5OR07NOWpOrTkReabwM7vHxLpDkxjxJuy9LRmRdAUlNrjwRmaXxMpjHx79Ap0iqbVkyIjnrpDW56kRkn4XJYBWfQASSJSOyroCkJleeiLEI5C8+HAWStPuyvqTkrJPW5KoTkX0aL4VTfFgKdNruywIkOetkNbnyRGSfxsthFB+eAp0iSUY0a3Llicg+jdfFW3xCEUiSjEgCVPtE5J/G6+IrPppvz3+AJOh1BZQnosU0vsE90YZxEh+9t8f0C+fkZ51kUemJGGQWpo2L+Gi9vUYz1ftB8ryw6qSLWyAJxuPTXKBae/CK4kQMM403DCk+mk1Y0AGSUMQs0DTeOvrx0Xx7sQWoIJo03hIRpfF2gEBqnAgUNOS3f+7xsRlBzX1zXk2P1VURb8n3xpPLwHk1CGQI2QCZqTJwXg0CGWJ9K8svzJSB82oQyCec3zgEMrOaVTi/cQhkZrU6bMfrdeH8xiGQmdXqAIFMw/mdQyAjq/HoC4CAgUCABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJGwItL7d3tq5fNJq3VSvJn/i7GS15EfpgyGnB31Ufllqe6SD47skqvjYEOjhsrjFc3V1s1mUFXa3mviltKx7qz1cjJcfVe5NHHRUujvx/a+S47skqvhYuiqda7y4GG+y73tWrpas+BdlZ9jeaqrL3XuriZfSVUetT/IjHRzfJXHFx4JARwUUwlettv7H/y4r6t5qqrezt5r4RBayrwcWvBsXe1HG0SZxxce+QKOSsu6vNnpW+ub3Vltc/L60x3AQ7ttWWXw2uzBzESjw+FgXqLS13Vtt9YuxVoCSHmJZj2F/b1fPFG08N4FCj49tgUal/f291R5uyqvfgzOsvMdwVJMr3jkvgYKPj91OtMr03Wr5g52VfUnxotHl1AwQh050BPGxm8aXJpWHq21UHcD9NDWpossivltNPOSnUUVzSOMjiI8NgZIzRpQveTsPilNnb7WNKkB7q4mBsrJht73VNAbKxGr5Fu6JKj64lAFIQCBAAgIBEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiTcCiSmw2lJnimRPOf20Lr4p+0j3Nl2JY+s7J548fKcoEkCjI9jgdJ3cPr89mmAkiV7C/Xe+W5qm1AJMD4+BDp9/PY0QMmae1HRCtBuaptgCTA+ngRa/vXfPh7mT0guWq0f7QUofSDyqE7ef+A/Dd1v0rnckrX+MtlX/sd35VNYhEKA8fHShIkA3GTzuz0epjOu7SptcfqNLsZHZ1gar8ttgJ48227ZurHbxjslwPh46kSLWQXyWSLEpCRHzXnyq7yKLgKUbZ1ueRWVQOHFx0cNlP+QT2czOgrQkzSE6gBlL6NsBzEJFF58PApUfoZtyjqJhwGKsAYKLz4eBSpv47MYSAKUz1CbByjWPtAmpPh4FKiYpyZ5+Vlyhj3kU2QnWcaj++I8yhdutxu1Wj/7eREgseWP0u7A8e5DJcD4hH4pw8sshwFhPT4hCySSjdIp3YCb+IQskKiwFXO1ARfxCVog4B8IBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEjQBWoFjYEQ+sZvfAwI5GgbK7ApCAGb7wECldDrZa/eC2IACOSeXi83yHdBTACBnNPrFQZFIdDok+efDYvflq+Kn7578+3wcM3F0/95+k267PgvxxR/h0BSIhPo7f1mcfPu7t/vXoxXd7989W78w5vV3fX/ff03f0x+fzF+988vEh3WYslPv3gqll2P343X4v/kL2LN/0q2SNR7/nIj/vbD3Yvht0Pxd74C+SauJiypgV4M396/Hi5/9Xq4uPl2uHz1evjDm7f33w7Fsrf3olZ6/R/f/+rD/Yd02Q9J3SR+F3/J1nw9FGu8H4vf3o+/e5X9HQKVElUnOqmBkkbnT1+OV9e/Gy9fZQKtx4lA6TLxe6LHv/3xq0Kg9Tj5P/m9WHP5+b8ke/jzHz57I377/cs/vMr+DoEqCbrwOblAww8v7+4/fP7FzSL5J35eJP0d8ZoJtLhOlqYCZcvE7+Iv4rfN1zfJHt6+/DL923/+/RfPsr/zFYjN58amIATo72H95bjxviFQ8CCN9wibghAIVSDK5SQ2nxubghAIVSDKHth8bmwKQuAcBWJD0IXPgUAeCbrwOcr3kI13LZ+LwejN8mm+tLtbuHxxd99w35pr2N+DR4IufI7qPeQj7mJAerP54bfX2dJut7td+PpP7xvuW3cNG3tg87mxKQgBjRro9XD1r8nL6jpf2t0t/Prl65uG+9Zcw8Ye2HxubApCQOM9ZJXNZnV9ujB3q/G+IVDwaLyHD9d394ubzer6dKGjPtBDNuTzrPkeyNtYgU1BCISQhT1cZBdLHi6b7oG+jRXYFIRAAAKtPs1rueXHp3eyBf0ZBF34HAjkkaALn6N8D5P0/2zIZ/HTorsz3y18+/zvZB0TnX1rriEomq6iKau/B6YEXfgc1XuYTFKDsoTr/TjNxRJ/5vPtQsW9HBX71l0jZYRONFs0aqA8V1/f5Q3IfG/hQjEMhDS+CjYFIaA9DrS+e3O6cPNa9YAG0vgK2BSEgPY40MMnz786Wbi6pu0baXzwnGMWxuZzY1MQAucoEBuCLnxOAAIhjeeM8j1M0/+LcaAv8/N/sFvo6FqY4TSeDUEXPkf1HqbT1KAs4frzOE/ZB4PBduHbe1Uej5vqK2BTEAIaNVA+5PPd87yyGewWLp8/f1O2MdL4StgUhID2ONB2JHp/oZv7gZDGM0Z7HGjx8qC7ky388NJBHwhpPGcCyMIgEGcCEIh/Gp9ddK4Pi8ITCUEg7mn8pNdrZhCHwlNRvodZ+n/+XNjqF/n539kt3A0O1d635hr290BmImYca2QQg8KTUb2H2Sw1KL/w/s1vM4E6nc5ml4UdpGY19q27xo6RpAHj0AfqQaBSshooy9U/3H+zXwNlC9/+emT/jsTVVTFo+JhjJ7o3QROmJq1m1l/8+Me/Pl64Wb//3kENtHwiLOVaAwmD0IlWkT8XtvlmfLLww+du+kCjpO5hK9B2zszanIlAFvetffTV1SVfgRrDpiAEAhEoSfhaxgRiQ9CFzwlGIGt78EjQhc9Rvod2+n9+689nxdX4frb0adlWevvWXMP+HjwSdOFzVO+h3U4NyhKuxVf/my3t94VB2+mCGu5bdw0be2DzubEpCAGNGigb8vnuq7d5xp7VQKtr2r4117CxB+pRs/vsDBC9QBnF/UCr6/2lh7813HeQAk17PUMGnYlA0vuBNqtrA/sOUaCpuHJhxqAzEcjivkO8JxoCHRCqQOb2UJeeaMKajj0fAoGo+w5RoMQgQ/5AIPK+wxIou7uFcO3rmCgEskn10YsfFmW3a2jvwfI2CbNeb9ZsS8MFAVuKCK6uVPMM6ezB9japP6YNgkBUtgJ9qng6SGsPtreBQCzZRnAkeWZwh/8nU9vtTU80YaZ6P40LAg7YNWGqPpD/J1PbvZ4wyLA/EIiM3j3R3ucHaovWq20u+yqAQFTCEKjbzQQyDgSikkYwEaSiCfP6ZOp83ut1rfgDgcj4eTK11jaJPsIgG/5AIDL8r8YPBj1hULfBYcwWBMjQHIn2lsb3+51eYtDcjj8QiIzeSLS3NL7f6wmDbPkDgchojUR7mx+oL5KvfmfQ4BBmCwLK0BqJ9pXG93KB7B0BAlHR6wN5SuN7/b5dfyAQGc2r8Z4mmEoMsuoPBCLT/Gq8/j1H5UetxPi1iyMgEJVdE8b8arwd2BQkWHhejW863U9tIBAVPxdTK7aZNJ4wynBBQCUcBZpMnBkEgahkV+NVcyAK3KbxECgg9iO4vm2V5fJu03g0YeGwF8FRS5mIaezBGOhEB8M2gssnj8pHgpK6Ka198F0Z4Igigg/S5qlA9IFE/wcCgSOyCJbMn1mQZWGLx0MIBI7QysLyNH5x8T0EAofoRTBP40c8v+qAAJuCBIteBNe3uUGGBGJD0IVnAYvpXSbGJs2sCwSiwkGgyXQy8WQQBKLC4LEe4Y8vgyAQFQgESDAQCE1YyHAQCJ3ogPEq0MzwjIf1gUBUmkeQclN9xmwy8W0QBKLiMY2fib6zZ4MgEBUIBEj46gNN2m00YTHgSaBJezJpoxMdAV4E6rbaovmyMudYPSAQFR8CdSetLgSKBA8CzeeT1qTLwh8IRMaAQPlYkObrIH2ddNs1t7PzCoGouK6BOp3JYDKxNmVdXSAQFccC9fsTYdCcfFRDQCAqTgWa9SeTxKDBnM3nxqYgweJSIOFPYlBnzudzY1OQYHEo0GyaCWTkqIZgU5BgcSqQMKhv5qiGYFOQYHElULudGdQ3dFRDsClIsDgSqD2dtjncQHYMBKLiRKBudzpNDWIHBKLiQqBEny4EihQHAs3nU2HQvj9sPjc2BQkW6/dEDwbTaWLQ4ffFsfnc2BQkWGzXQJ3OVBh0dO2LzefGpiDBYlegJG2fCoOOr32x+dzYFCRYrArU7U+niUGDk2unbD43NgUJFosCtYU/iUEdNtfeT4FAVDQj2ODLVtrzeSZQ06K5AAJR0Ytggy9bGQxmM2EQa38gEBmtCNb/roxZpzNLDZL7w+ZzY1OQYLEjUL8/mwmDyno/bD43NgUJFs0mrN6XrST6CINOs696R3UAm4IEi2YEa33ZSiKPMEiRfbH53NgUJFjMp/HdTiaQ6sty2XxubAoSLMbT+EG/3+5X+MMHCETFcBrf6fTb7cSgPuPBw30gEBWzWVg/qX4SWA8+HwCBqBgVqN/tZgIZOaoL2BQkWAym8Z1+IpAwqHrwmc3nxqYgwWIujU/6PXNRBZUMPjc5qn3YFCRYjKXx/f5AGKTXe2bzubEpSLCYSuP7/Y4wSPPSKZvPjU1BgqV5Gn9wT3TScCUG6bRevIBAVMxkYf0ckyVzAgSiYlIgk+VyBASiYiiNr+kPm8+NTUGCxVQaX6/+YfO5sSlIsDie4s7YUQ3BpiDBAoEACQMCBY2BEJ43elnYVRFvyffG19mRwe08bAgk6I5ES24EarQjY9tBIB5oRnN9K0vAGuzI2HYQiAfGogmBzhMIBEjUiOb2ggZ1R0a2g0A8gECABAQCJBBNQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJAwI9D6VnGz6wHLJ63WxbjYQPoi3+7jstUrNk43bHpUUIkZgR4uNW56TVlc7m8gfZGxuhIfsmqrko2zDRseFVRjRCBxnV721LOEh2d7G0hfZFuNWp8kf1BtVbJxtmHDowINjAi0zD/datb/cL+3gfRFttm7sfijaquSjbMNGx4VaOBYoNWnf9V6dN/go2woUFG2hkcFlTgWaPnR/Wb186FjgRofFVTiWCBBbQeKQzQWqPFRQSWuO9HZ2vW7s8XnXLMTfSAQOtEWcJzGL5KkevmTcf2EOv2MG6Tx6YaNjwoqMSPQ6kp3MG6UPV+fbyB9kZIKpNqqbON0w6ZHBZXgUgYgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJBgKJCYzOfwQS08+McXfgKJpwDXt3jULxDYCbS6utlkkzCAEGAn0KJ4THR9+/mT1mXSnl2KJmz58W9ararvbQXu4SfQxTj7YX17MV5dXYyTykgI9OTZzi3AB84C3RT/hEAfYRINlvATaNeEHQiUzw8EmMFOoKwTnfwPgYKAnUCb0aP7tP8DgYKAn0CbRSsdSIRAQcBQIBASEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJP4fc/c8ThlFYg0AAAAASUVORK5CYII=" /><!-- --></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old.par)</span></code></pre></div>
+<p>The results above demonstrate that a single measure of carbon
+mineralization (Cmin) or nitrogen mineralization(Nmin) is not sufficient
+to fit two food web parameters like microbial production efficiency
+(x-axis and color in top two figures) because multiple combinations can
+produce the true value (dashed lines).</p>
+<p>When the user has data on both carbon and nitrogen mineralization,
+two microbial production efficiencies can be resolved accurately (bottom
+figure; color and fill show the two production efficiencies).</p>
+<p>In a applied situation, optimization, for example
+<code>stats::optim</code>, could be used to match the parameters and the
+data. Gauzens <em>et al.</em> 2019 provide excellent examples for how to
+use metabolic scaling relationships to fit loss rates in their R package
+<code>fluxweb</code>. Their package places metabolic losses in a
+different location than <code>soilfoodwebs</code>, but the user could
+predict metabolic losses using body size and then adjust production
+efficiencies accordingly to get the desired carbon mineralization
+rates.</p>
+<p>More detailed relationships between abiotic variables and microbial
+assimilation and production efficiency are available. These can be
+helpful because the relationship between body size and metabolism are
+less useful for microorganisms.</p>
+</div>
+<div id="using-defined-relationships" class="section level2">
+<h2>Using defined relationships</h2>
+<p>Another option is to use defined relationships between respiration
+(Manzoni <em>et al.</em> 2012). For example, Xu <em>et al.</em> (2014)
+provide some relationships for microbial death rate, respiration rate,
+and production efficiency across temperature, moisture, and substrate
+quality gradients. We implement these for the community here to
+demonstrate how to adjust microbial death rate and conversion
+efficiency.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>temp_moist_microbe <span class="ot">&lt;-</span> <span class="cf">function</span>(temp, moist, comm){</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set functional range:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(temp <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> moist <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="fu">stop</span>(<span class="st">&quot;Function not coded for these conditions.&quot;</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Functions and parameters from Xu et al. 2014</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  fmm <span class="ot">=</span> <span class="fu">ifelse</span>(moist <span class="sc">&lt;</span> <span class="fl">0.6</span>,<span class="fu">log10</span>(<span class="fl">0.05</span><span class="sc">/</span>moist)<span class="sc">/</span><span class="fu">log10</span>(<span class="fl">0.05</span><span class="sc">/</span>moist),<span class="dv">1</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  fmt <span class="ot">=</span> <span class="fl">2.5</span><span class="sc">^</span>((temp <span class="sc">-</span> <span class="dv">25</span>)<span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># New microbial death rate</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  comm<span class="sc">$</span>prop[comm<span class="sc">$</span>prop<span class="sc">$</span>ID <span class="sc">==</span> <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;d&quot;</span>] <span class="ot">=</span> </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    comm<span class="sc">$</span>prop[comm<span class="sc">$</span>prop<span class="sc">$</span>ID <span class="sc">==</span> <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;d&quot;</span>]<span class="sc">*</span>fmm<span class="sc">*</span>fmt</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># New microbial assimilation efficiency</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  comm<span class="sc">$</span>prop[comm<span class="sc">$</span>prop<span class="sc">$</span>ID <span class="sc">==</span> <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;a&quot;</span>] <span class="ot">=</span> </span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.43</span> <span class="sc">-</span> (<span class="sc">-</span><span class="fl">0.012</span><span class="sc">*</span>(temp<span class="dv">-15</span>)))<span class="sc">*</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    (comm<span class="sc">$</span>prop[comm<span class="sc">$</span>prop<span class="sc">$</span>ID <span class="sc">==</span> <span class="st">&quot;Microbe&quot;</span>, <span class="st">&quot;CN&quot;</span>]<span class="sc">/</span>comm<span class="sc">$</span>prop[comm<span class="sc">$</span>prop<span class="sc">$</span>ID <span class="sc">==</span> <span class="st">&quot;Detritus&quot;</span>, <span class="st">&quot;CN&quot;</span>])<span class="sc">^</span><span class="fl">0.6</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ignoring changes in maintenance respiration here. See the cited paper for the details.</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(comm)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore the carbon mineralization rate across temperature as an example</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">temp =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">30</span>, <span class="at">length =</span> <span class="dv">10</span>))</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>Cmin <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  res<span class="sc">$</span>Cmin[i] <span class="ot">=</span> </span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>( <span class="co"># Sum all C min rates</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">comana</span>( <span class="co"># Calculate Cmin</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">corrstoich</span>( <span class="co"># Correct stoichiometry</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">temp_moist_microbe</span>(res[i, <span class="st">&quot;temp&quot;</span>], <span class="fl">0.7</span>, our_comm)</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>      )<span class="sc">$</span>Cmin</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Cmin<span class="sc">~</span>temp, <span class="at">data =</span> res, <span class="at">xlab =</span> <span class="st">&quot;Temperature&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;C. mineralization&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="contributions-to-carbon-and-nitrogen-mineralization" class="section level1">
+<h1>Contributions to carbon and nitrogen mineralization</h1>
+<p>A core feature of <code>soilfoodwebs</code> is to calculate the
+contribution of each trophic species to carbon and nitrogen
+mineralization. This is achieved using the function
+<code>whomineralizes</code>. The direct contribution sums up each
+trophic species’ carbon and nitrogen mineralization from
+<code>comana</code>, while their indirect contribution calculates the
+change in fluxes without that trophic species and removes their direct
+contributions. Similar calculations are outlined by Holtkamp <em>et
+al.</em> (2011), but our version of them produces a different result.
+Specifically, our calculation uses the following formula for indirect
+effects <span class="math inline">\((IE_X)\)</span> on mineralization of
+element <span class="math inline">\(X\)</span>:</p>
+<p><span class="math display">\[IE_X = (X_{with} - X_{without}-
+X_{mineralization})/X_{with} \]</span></p>
+<p>where <span class="math inline">\(X_{with}\)</span> is the total
+mineralization with the trophic species,<span class="math inline">\(X_{without}\)</span> is the mineralization without
+the trophic species, and <span class="math inline">\(X_{mineralization}\)</span> is the mineralization
+coming directly from the trophic species (e.g., respiration rate).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mineralization contributions</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">whomineralizes</span>(our_comm)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID      DirectC       DirectN     IndirectC     IndirectN</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator 3.961347e-06 -0.0001227279  2.410963e-05  2.362742e-04</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1 1.438074e-03  0.0195107322  3.709909e-05 -6.907725e-05</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2 2.427345e-04  0.0015235815 -7.783569e-06 -9.776173e-05</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe 9.983152e-01  0.9790884142 -8.584855e-17 -2.345553e-04</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Detritus 0.000000e+00  0.0000000000 -8.548112e-03  1.016577e+00</span></span></code></pre></div>
+<p>Remember that the units of these fluxes are set by the units of
+biomass <code>B</code> and death rate <code>d</code>.</p>
+<div id="calculate-inputs" class="section level2">
+<h2>Calculate inputs</h2>
+<p>You can also calculate the inputs and outputs of the food web using
+the function <code>calculate_inputs</code>. This function saves a data
+frame, but also prints the results on the console.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>inout <span class="ot">&lt;-</span> <span class="fu">calculate_inputs</span>(our_comm)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Equilibrium is maintained by these inputs:&quot;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The system gains organic compounds from the detritus pool:&quot;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Gains of C from detritus:25368&quot;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Gains of N from detritus:-151&quot;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Gains detritus at a C:N ratio of:-168&quot;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The web mineralizes 25368 units of carbon&quot;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The web must immobilize 151 units of nitrogen&quot;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>inout</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $IN</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator    Prey1    Prey2  Microbe Detritus </span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        0        0        0        0        0 </span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $r_i</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator    Prey1    Prey2  Microbe Detritus </span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        0        0        0        0        0 </span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $Cmin</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Predator       Prey1       Prey2     Microbe    Detritus </span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.10000    36.30265    13.13052 25318.47018     0.00000 </span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $Nmin</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Predator         Prey1         Prey2       Microbe      Detritus </span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.01880342    0.00000000    0.00000000 -150.70517965    0.00000000</span></span></code></pre></div>
+<p>Notice that in this example the equilibrium can only be maintained by
+a gain of carbon and loss of nitrogen. This is because the dead microbes
+and animals are high nitrogen items that must be lost from the
+community.</p>
+<p>We can add a necromass pool with the right C:N ratio to fix this
+problem if we don’t want to mix our high C:N detrital inputs with our
+low C:N ratio detrital recycling.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the new node</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>our_comm_necro <span class="ot">=</span> <span class="fu">newnode</span>(our_comm, <span class="st">&quot;Necromass&quot;</span>, <span class="at">prey =</span> <span class="cn">NA</span>, <span class="at">predator =</span> <span class="fu">c</span>(<span class="at">Prey1 =</span> <span class="dv">1</span>, <span class="at">Prey2 =</span> <span class="dv">1</span>, <span class="at">Microbe =</span> <span class="dv">1</span>), <span class="at">newprops =</span> <span class="fu">c</span>(<span class="at">d =</span> <span class="dv">0</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">p =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="dv">100</span>, <span class="at">CN =</span> <span class="dv">5</span>, <span class="at">DetritusRecycling =</span> <span class="dv">1</span>, <span class="at">isDetritus =</span> <span class="dv">1</span>, <span class="at">isPlant =</span> <span class="dv">0</span>, <span class="at">canIMM =</span> <span class="dv">0</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in checkcomm(COMM): Rescaling Detritus Recycling to sum to 1.</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the DetritusRecycling of the old detritus pool</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>our_comm_necro<span class="sc">$</span>prop<span class="sc">$</span>DetritusRecycling <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check out the community:</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>our_comm_necro</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $imat</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           Predator Prey1 Prey2 Microbe Detritus Necromass</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator         0     1     1       0        0         0</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1            0     0     0       1        1         1</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2            0     0     0       0        1         1</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe          0     0     0       0        1         1</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus         0     0     0       0        0         0</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Necromass        0     0     0       0        0         0</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $prop</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          ID   d    a   p        B   CN DetritusRecycling isDetritus isPlant</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  Predator 1.0 0.61 0.5 1.00e-01  4.5                 0          0       0</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     Prey1 3.0 0.65 0.4 8.00e+00  4.8                 0          0       0</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     Prey2 0.5 0.45 0.3 5.00e+00  5.0                 0          0       0</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   Microbe 1.2 1.00 0.3 9.00e+03  8.0                 0          0       0</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  Detritus 0.0 1.00 1.0 1.38e+06 30.0                 0          1       0</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d Necromass 0.0 1.00 1.0 1.00e+02  5.0                 1          1       0</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   canIMM MutualPred</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0       &lt;NA&gt;</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0       &lt;NA&gt;</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0       &lt;NA&gt;</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      1       &lt;NA&gt;</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      0       &lt;NA&gt;</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d      0       &lt;NA&gt;</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="co"># New inputs</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>inout2 <span class="ot">=</span> <span class="fu">calculate_inputs</span>(our_comm_necro)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Equilibrium is maintained by these inputs:&quot;</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;36086 units of C to Detritus&quot;</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;1203 units of N to Detritus&quot;</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The system looses organic compounds from the detritus pool:&quot;</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Looses of C from detritus:10838&quot;</span></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Looses of N from detritus:1352&quot;</span></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Looses detritus at a C:N ratio of:8&quot;</span></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;------------------------------------------------&quot;</span></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The web mineralizes 25248 units of carbon&quot;</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;The web must immobilize 150 units of nitrogen&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="stability" class="section level1">
+<h1>Stability</h1>
+<p>The stability of the community at equilibrium can be calculated using
+an eigen decomposition of the Jacobian matrix. Several features are
+available:</p>
+<ol style="list-style-type: decimal">
+<li>Basic analysis of the Jacobian.</li>
+<li>Analysis of the Jacobian adding density-dependent population
+regulation to selected trophic species.</li>
+<li>Soil food web model also use a modified stability calculation, where
+<code>smin</code> is calculated. <code>smin</code> is the value
+multiplied by the diagonal terms of the Jacobian necessary to make the
+food web stable (de Ruiter <em>et al.</em> 1995).</li>
+</ol>
+<p>Two stability functions return these calculations.
+<code>stability</code> calculates the Jacobian or <code>smin</code>
+algebraically using the structure of soil food web models.
+<code>stability2</code> estimates the Jacobian using the function
+<code>rootSolve::jacobian.full</code>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>stab1 <span class="ot">&lt;-</span> <span class="fu">stability</span>(our_comm)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The Jacobian:</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>stab1<span class="sc">$</span>J</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Predator        Prey1         Prey2       Microbe      Detritus</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predator  5.768275e-12  0.007692308  7.692308e-03  0.000000e+00  0.000000e+00</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey1    -2.017654e+00  0.000000000  0.000000e+00  1.466774e-03  7.971596e-06</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prey2    -1.261034e+00  0.000000000 -1.276756e-14  0.000000e+00  1.902973e-06</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Microbe   0.000000e+00 -6.346616813  0.000000e+00  2.220446e-16  7.862879e-03</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Detritus  2.278689e+00  1.793401176 -2.641488e+00 -2.816830e+00 -2.624094e-02</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># The eigen decomposition:</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>stab1<span class="sc">$</span>eigen</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; eigen() decomposition</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $values</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.007044524+0.2010952i -0.007044524-0.2010952i -0.005289296+0.1263491i</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] -0.005289296-0.1263491i -0.001573304+0.0000000i</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $vectors</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                            [,1]                       [,2]</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]  9.857894e-06+5.10678e-05i  9.857894e-06-5.10678e-05i</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,] -1.026049e-03+1.47423e-04i -1.026049e-03-1.47423e-04i</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,] -3.180124e-04+6.35186e-05i -3.180124e-04-6.35186e-05i</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,] -7.144527e-03-7.11323e-02i -7.144527e-03+7.11323e-02i</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,]  9.974407e-01+0.00000e+00i  9.974407e-01+0.00000e+00i</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                             [,3]                        [,4]             [,5]</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]  6.505374e-06-5.351043e-05i  6.505374e-06+5.351043e-05i -3.452614e-08+0i</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]  3.392426e-04+1.161714e-04i  3.392426e-04-1.161714e-04i  1.237190e-03+0i</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,]  5.352138e-04+2.747616e-05i  5.352138e-04-2.747616e-05i -1.237183e-03+0i</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,] -7.710979e-03-4.480378e-02i -7.710979e-03+4.480378e-02i -6.809188e-03+0i</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,]  9.989658e-01+0.000000e+00i  9.989658e-01+0.000000e+00i  9.999753e-01+0i</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="co"># The largest eignvalue:</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>stab1<span class="sc">$</span>rmax <span class="co"># The community is stable if this is negative.</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.001573304</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the function calc_smin to recover smin:</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_smin</span>(our_comm)</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.004</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Add density-dependence using stability2:</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a><span class="fu">stability2</span>(our_comm, <span class="at">densitydependence =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $J</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      PredatorC       Prey1C       Prey2C      MicrobeC     DetritusC</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] -1.000000  0.007692308  0.007692308  0.000000e+00  0.000000e+00</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,] -2.017654 -2.999999937  0.000000000  1.466774e-03  7.971596e-06</span></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,] -1.261034  0.000000000 -0.500000006  0.000000e+00  1.902973e-06</span></span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,]  0.000000 -6.346613191  0.000000000  2.021099e-08  7.846155e-03</span></span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,]  3.278728  4.793355401 -2.141496225 -2.816830e+00 -2.622422e-02</span></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $eigen</span></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; eigen() decomposition</span></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $values</span></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -2.9890965+0.0000000i -0.9878663+0.0000000i -0.5199380+0.0000000i</span></span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] -0.0146618+0.1480693i -0.0146618-0.1480693i</span></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $vectors</span></span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                 [,1]           [,2]            [,3]                        [,4]</span></span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] -0.001621502+0i  0.07500995+0i  0.004734199+0i  6.243183e-09+2.040386e-07i</span></span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]  0.420113768+0i -0.07556810+0i -0.003884991+0i  6.170475e-07+2.564393e-05i</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,] -0.000821620+0i  0.19388862+0i  0.299337225+0i -3.744874e-06+6.123591e-07i</span></span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,]  0.891564517+0i -0.47874413+0i -0.061790166+0i  4.102973e-03+5.253630e-02i</span></span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,]  0.169156230+0i -0.84963182+0i  0.952124832+0i -9.986106e-01+0.000000e+00i</span></span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                             [,5]</span></span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]  6.243183e-09-2.040386e-07i</span></span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]  6.170475e-07-2.564393e-05i</span></span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,] -3.744874e-06-6.123591e-07i</span></span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,]  4.102973e-03-5.253630e-02i</span></span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,] -9.986106e-01+0.000000e+00i</span></span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rmax</span></span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.01466177</span></span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a><span class="co"># stability and stability2 should produce similar results when used in default:</span></span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a><span class="fu">stability</span>(our_comm)<span class="sc">$</span>rmax</span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.001573304</span></span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a><span class="fu">stability2</span>(our_comm)<span class="sc">$</span>rmax</span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.001575481</span></span></code></pre></div>
+</div>
+<div id="simulate-the-food-web-away-from-equilibrium" class="section level1">
+<h1>Simulate the food web away from equilibrium</h1>
+<p>The function <code>CNsim</code> wraps a number of underlying
+functions together to retrieve the model parameters and simulate the
+model (de Ruiter <em>et al.</em> 1994). Feeding occurs using Type-I
+(i.e., linear) functional responses, while density-dependence is user
+defined. Because the model is at equilibrium to start, this function is
+interesting when the starting conditions are modified or it is used for
+a detritus simulation experiment.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate equilibirum over 100 time steps</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>sim1 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify predator biomass to 80% of equilibrium value</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>sim2 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm, <span class="at">start_mod =</span> <span class="fu">c</span>(<span class="fl">0.8</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify predator biomass to 80% of equilibrium value with density-dependence.</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>sim3 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm, <span class="at">start_mod =</span> <span class="fu">c</span>(<span class="fl">0.8</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">densitydependence =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results:</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>old.par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Predator_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim2, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Predator_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim3, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Predator_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim1, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Prey1_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim2, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Prey1_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim3, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Prey1_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim1, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Prey2_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim2, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Prey2_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim3, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Prey2_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim1, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Microbe_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim2, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Microbe_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim3, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Microbe_Carbon<span class="sc">~</span>Day, <span class="at">data =</span> sim1, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Base&quot;</span>, <span class="st">&quot;80% predator&quot;</span>, <span class="st">&quot;w/ density-dependence&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;orange&quot;</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old.par)</span></code></pre></div>
+</div>
+<div id="decomposition-constant" class="section level1">
+<h1>Decomposition constant</h1>
+<p>The model can calculate the decomposition constant and the effect of
+each soil organism on the decomposition rate. The function
+`<code>decompexpt</code> can calculate decomposition constants (k) with
+the option overtime enabled to return a vector of decomposition.</p>
+<p>Besides returning the decomposition rate, the function returns a
+table of the effect of each trophic species on the decomposition
+constant. The direct effects set each species consumption to zero, but
+do not recalculate the food web consumption rates. The indirect effects
+recalculate the consumption rates and subtract the direct effects.</p>
+<p>Overtime produces a list of simulations showing how each trophic
+species affects overall decomposition rate over time. These results can
+be easily plotted. The user must select the detritus pool, because the
+list is multilayered when there is more than one detritus pool.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The function decompexpt </span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>decompres <span class="ot">=</span> <span class="fu">decompexpt</span>(our_comm, <span class="at">overtime =</span> <span class="dv">10</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The decomposition constants for each detritus pool identified in the community</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>decompres<span class="sc">$</span>basedecomp</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Detritus </span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.02616952</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># A table of the direct and indirect effects </span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>decompres<span class="sc">$</span>decompeffects</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         ID DetritusID       Direct      Indirect</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Predator   Detritus 0.0000000000  4.767834e-05</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    Prey1   Detritus 0.0025607998  1.428502e-05</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Prey2   Detritus 0.0005386456 -1.363312e-05</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  Microbe   Detritus 0.9969005546 -1.670087e-05</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the decomposition with and without Microbe</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>decompdata <span class="ot">=</span> decompres<span class="sc">$</span>overtime<span class="sc">$</span>Detritus</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Original<span class="sc">~</span>Day, <span class="at">data =</span> decompdata, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="dv">1</span>))</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Microbe<span class="sc">~</span>Day, <span class="at">data =</span> decompdata, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Original&quot;</span>, <span class="st">&quot;No Microbe&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="decomposition-experiments-in-silico" class="section level1">
+<h1>Decomposition experiments <em>in silico</em></h1>
+<p>The model can be used to simulate the decomposition of detritus in an
+<em>in silico</em> experiment wherein the surrounding food web is not
+affected. Furthermore, the surrounding food web can be held at
+equilibrium or modified during the experiment. The inspiration for this
+functionality comes from the work of Zheng <em>et al.</em> (1997).</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate detritus experiment at equilibirum over 100 time steps.</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This is equivalent to the overtime option presented for decompexpt for the original community although numerical errors in the solver makes it diverge slightly.</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sim1 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm, <span class="at">DETEXPT =</span> <span class="st">&quot;Detritus&quot;</span>, <span class="at">TIMES =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in CNsim(our_comm, DETEXPT = &quot;Detritus&quot;, TIMES = 1:50): Making the</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; starting detritus experiment 100 units of C.</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify microbial biomass to 80% of equilibrium value</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>sim2 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm, <span class="at">start_mod =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">1</span>), <span class="at">DETEXPT =</span> <span class="st">&quot;Detritus&quot;</span>, <span class="at">TIMES =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in CNsim(our_comm, start_mod = c(1, 1, 1, 0.5, 1), DETEXPT =</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &quot;Detritus&quot;, : Making the starting detritus experiment 100 units of C.</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify microbial biomass to 80% of equilibrium value with density-dependence.</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>sim3 <span class="ot">&lt;-</span> <span class="fu">CNsim</span>(our_comm, <span class="at">DETEXPT =</span> <span class="st">&quot;Detritus&quot;</span>, <span class="at">start_mod =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">1</span>), <span class="at">densitydependence =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">TIMES =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in CNsim(our_comm, DETEXPT = &quot;Detritus&quot;, start_mod = c(1, 1, 1, :</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Making the starting detritus experiment 100 units of C.</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results:</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(DetExpt<span class="sc">~</span>Day, <span class="at">data =</span> sim2, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(DetExpt<span class="sc">~</span>Day, <span class="at">data =</span> sim3, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(DetExpt<span class="sc">~</span>Day, <span class="at">data =</span> sim1, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Base&quot;</span>, <span class="st">&quot;80% microbial biomass&quot;</span>, <span class="st">&quot;w/ density-dependence&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;orange&quot;</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>Buchkowski, R. W., and Z. Lindo. 2021. Stoichiometric and structural
+uncertainty in soil food web models. Functional Ecology 35:288–300.</p>
+<p>Gauzens, B., Barnes, A., Giling, D. P., Hines, J., Jochum, M.,
+Lefcheck, J. S., Rosenbaum, B., Wang, S., &amp; Brose, U. (2019).
+fluxweb: An R package to easily estimate energy fluxes in food webs.
+Methods in Ecology and Evolution, 10(2), 270–279.</p>
+<p>Holtkamp, R., A. van der Wal, P. Kardol, W. H. van der Putten, P. C.
+de Ruiter, and S. C. Dekker. 2011. Modelling C and N mineralisation in
+soil food webs during secondary succession on ex-arable land. Soil
+Biology &amp; Biochemistry 43:251–260.</p>
+<p>Jian, J., Vargas, R., Anderson-Teixeira, K., Stell, E., Herrmann, V.,
+Horn, M., Kholod, N., Manzon, J., Marchesi, R., Paredes, D., &amp;
+Bond-Lamberty, B. (2021). A restructured and updated global soil
+respiration database (SRDB-V5). Earth System Science Data, 13(2),
+255–267.</p>
+<p>Koltz, A. M., A. Asmus, L. Gough, Y. Pressler, and J. C. Moore. 2018.
+The detritus-based microbial-invertebrate food web contributes
+disproportionately to carbon and nitrogen cycling in the Arctic. Polar
+Biology 41:1531–1545.</p>
+<p>Manzoni, S., Taylor, P., Richter, A., Porporato, A., &amp; Ågren, G.
+I. (2012). Environmental and stoichiometric controls on microbial
+carbon-use efficiency in soils: Research review. New Phytologist,
+196(1), 79–91.</p>
+<p>Moore, J.C. and de Ruiter, P. C. 2012. Energetic Food Webs: An
+Analysis of Real and Model Ecosystems. Oxford University Press,
+Oxford.</p>
+<p>de Ruiter, P. C., A.-M. Neutel, and J. C. Moore. 1994. Modelling food
+webs and nutrient cycling in agro-ecosystems. Trends in Ecology &amp;
+Evolution 9:378–383.</p>
+<p>de Ruiter, P. C., A.-M. Neutel, and J. C. Moore. 1995. Energetics,
+Patterns of Interaction Strengths, and Stability in Real Ecosystems.
+Science 269:1257–1260.</p>
+<p>Xu, X., Schimel, J. P., Thornton, P. E., Song, X., Yuan, F., &amp;
+Goswami, S. (2014). Substrate and environmental controls on microbial
+assimilation of soil organic carbon: A framework for Earth system
+models. Ecology Letters, 17(5), 547–555.</p>
+<p>Zheng, D. W., J. Bengtsson, and G. I. Ågren. 1997. Soil food webs and
+ecosystem processes: decomposition in donor-control and Lotka-Volterra
+systems. American Naturalist 149:125–148.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
